@@ -1,0 +1,93 @@
+.best-bundle {
+    padding: 3rem 2rem;
+    background: #fafafa;
+}
+
+.bundle-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.bundle-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid #f0f0f0;
+    transition: transform 0.3s ease;
+}
+
+.bundle-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.bundle-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: #28a745;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+.bundle-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.bundle-info {
+    padding: 1rem;
+}
+
+.bundle-info h4 {
+    font-size: 0.95rem;
+    margin-bottom: 0.25rem;
+}
+
+.bundle-info p {
+    font-size: 0.75rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.bundle-price {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.current-price {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #ff6b6b;
+}
+
+.original-price {
+    font-size: 0.8rem;
+    color: #999;
+    text-decoration: line-through;
+}
+
+@media (max-width: 768px) {
+    .bundle-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .best-bundle {
+        padding: 2rem 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .bundle-grid {
+        grid-template-columns: 1fr;
+    }
+}
