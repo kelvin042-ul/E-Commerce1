@@ -24,17 +24,19 @@
 }
 
 .cart-item-name {
-    color: #333;
+    color: #000000;
     font-size: 0.85rem;
     font-weight: 500;
     margin-bottom: 0.25rem;
+    font-family: 'Poppins', sans-serif;
 }
 
 .cart-item-price {
-    color: #ff6b6b;
+    color: #28a745;
     font-weight: 600;
     font-size: 0.8rem;
     margin-bottom: 0.25rem;
+    font-family: 'Poppins', sans-serif;
 }
 
 .cart-item-actions {
@@ -64,12 +66,13 @@
     cursor: pointer;
     font-weight: bold;
     font-size: 0.9rem;
+    font-family: 'Poppins', sans-serif;
 }
 
 .quantity-btn:hover {
-    background: #ff6b6b;
+    background: #28a745;
     color: white;
-    border-color: #ff6b6b;
+    border-color: #28a745;
 }
 
 .quantity {
@@ -77,30 +80,33 @@
     min-width: 24px;
     text-align: center;
     font-size: 0.85rem;
+    font-family: 'Poppins', sans-serif;
 }
 
 .remove-btn {
     padding: 0.3rem 0.8rem;
     background: none;
-    border: 1px solid #ff6b6b;
-    color: #ff6b6b;
+    border: 1px solid #28a745;
+    color: #28a745;
     border-radius: 4px;
     cursor: pointer;
     font-size: 0.75rem;
+    font-family: 'Poppins', sans-serif;
     transition: all 0.3s ease;
 }
 
 .remove-btn:hover {
-    background: #ff6b6b;
+    background: #28a745;
     color: white;
 }
 
 .cart-item-total {
     font-weight: bold;
-    color: #ff6b6b;
+    color: #28a745;
     font-size: 0.9rem;
     display: flex;
     align-items: center;
+    font-family: 'Poppins', sans-serif;
 }
 
 @media (max-width: 640px) {

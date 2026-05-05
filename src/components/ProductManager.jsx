@@ -14,23 +14,22 @@ function ProductManager() {
         price: '',
         description: '',
         image: '',
-        category: 'backpack',
-        isNew: false
+        category: 'Hand Bags',
+        isNew: false,
+        isBestSeller: false,
+        outOfStock: false
     })
     const [deleteConfirm, setDeleteConfirm] = useState(null)
 
-    // Categories for dropdown
     const categories = [
-        { id: 'Channel', name: 'Channel Bags' },
-        { id: 'Clutch', name: 'Clutch Bags' },
-        { id: 'Tote', name: 'Tote' },
-        { id: 'Hand/Shoulder', name: 'Hand Bags' },
-        { id: 'Luxury', name: 'Luxury Bags' },
-        { id: 'Coach', name: 'Coach Bags' },
-        { id: 'Casual', name: 'Casual Bags' }
+        { id: 'Channel Bags', name: 'Channel Bags' },
+        { id: 'Clutch Bags', name: 'Clutch Bags' },
+        { id: 'Tote Bags', name: 'Tote Bags' },
+        { id: 'Hand Bags', name: 'Hand Bags' },
+        { id: 'Luxury Bags', name: 'Luxury Bags' },
+        { id: 'Coach Bags', name: 'Coach Bags' }
     ]
 
-    // Fetch products from Firestore
     const fetchProducts = async () => {
         try {
             const q = query(collection(db, 'products'), orderBy('createdAt', 'desc'))
@@ -38,7 +37,9 @@ function ProductManager() {
             const productsData = querySnapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data(),
-                isNew: doc.data().isNew || false
+                isNew: doc.data().isNew || false,
+                isBestSeller: doc.data().isBestSeller || false,
+                outOfStock: doc.data().outOfStock || false
             }))
             setProducts(productsData)
         } catch (error) {
@@ -58,10 +59,11 @@ function ProductManager() {
             await addDoc(collection(db, 'products'), {
                 ...newProduct,
                 price: parseFloat(newProduct.price),
-                createdAt: newProduct.isNew ? new Date().toISOString() : null  // ← CHANGE TO THIS
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
             })
             setShowAddForm(false)
-            setNewProduct({ name: '', price: '', description: '', image: '', category: 'backpack', isNew: false })
+            setNewProduct({ name: '', price: '', description: '', image: '', category: 'Hand Bags', isNew: false, isBestSeller: false, outOfStock: false })
             fetchProducts()
             alert('✅ Product added successfully!')
         } catch (error) {
@@ -69,7 +71,7 @@ function ProductManager() {
             alert('❌ Failed to add product.')
         }
     }
-    // EDIT PRODUCT - NEW FUNCTION
+
     const handleEditProduct = async (e) => {
         e.preventDefault()
         try {
@@ -80,7 +82,10 @@ function ProductManager() {
                 description: editingProduct.description,
                 image: editingProduct.image,
                 category: editingProduct.category,
-                isNew: editingProduct.isNew || false
+                isNew: editingProduct.isNew || false,
+                isBestSeller: editingProduct.isBestSeller || false,
+                outOfStock: editingProduct.outOfStock || false,
+                updatedAt: new Date().toISOString()
             })
             setShowEditForm(false)
             setEditingProduct(null)
@@ -92,7 +97,38 @@ function ProductManager() {
         }
     }
 
-    // Delete product
+    // Toggle Best Seller
+    const toggleBestSeller = async (product) => {
+        try {
+            const productRef = doc(db, 'products', product.id)
+            await updateDoc(productRef, {
+                isBestSeller: !product.isBestSeller,
+                updatedAt: new Date().toISOString()
+            })
+            fetchProducts()
+            alert(product.isBestSeller ? '❌ Removed from Best Sellers' : '⭐ Added to Best Sellers!')
+        } catch (error) {
+            console.error('Error toggling best seller:', error)
+            alert('❌ Failed to update.')
+        }
+    }
+
+    // Toggle Out of Stock
+    const toggleOutOfStock = async (product) => {
+        try {
+            const productRef = doc(db, 'products', product.id)
+            await updateDoc(productRef, {
+                outOfStock: !product.outOfStock,
+                updatedAt: new Date().toISOString()
+            })
+            fetchProducts()
+            alert(product.outOfStock ? '✅ Product back in stock!' : '⚠️ Product marked as Out of Stock')
+        } catch (error) {
+            console.error('Error toggling stock:', error)
+            alert('❌ Failed to update.')
+        }
+    }
+
     const handleDeleteProduct = async (productId) => {
         try {
             await deleteDoc(doc(db, 'products', productId))
@@ -105,7 +141,6 @@ function ProductManager() {
         }
     }
 
-    // Open edit form with product data
     const openEditForm = (product) => {
         setEditingProduct({
             id: product.id,
@@ -114,7 +149,9 @@ function ProductManager() {
             description: product.description,
             image: product.image,
             category: product.category,
-            isNew: product.isNew || false
+            isNew: product.isNew || false,
+            isBestSeller: product.isBestSeller || false,
+            outOfStock: product.outOfStock || false
         })
         setShowEditForm(true)
     }
@@ -132,7 +169,7 @@ function ProductManager() {
                 </button>
             </div>
 
-            {/* Add Product Form Modal */}
+            {/* Add Product Modal */}
             {showAddForm && (
                 <div className="modal-overlay">
                     <div className="modal">
@@ -140,63 +177,30 @@ function ProductManager() {
                         <form onSubmit={handleAddProduct}>
                             <div className="form-group">
                                 <label>Product Name *</label>
-                                <input
-                                    type="text"
-                                    value={newProduct.name}
-                                    onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
-                                    required
-                                />
+                                <input type="text" value={newProduct.name} onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })} required />
                             </div>
                             <div className="form-group">
-                                <label>Price ($) *</label>
-                                <input
-                                    type="number"
-                                    step="0.01"
-                                    value={newProduct.price}
-                                    onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
-                                    required
-                                />
+                                <label>Price (₦) *</label>
+                                <input type="number" step="0.01" value={newProduct.price} onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })} required />
                             </div>
                             <div className="form-group">
                                 <label>Description *</label>
-                                <textarea
-                                    value={newProduct.description}
-                                    onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
-                                    rows="3"
-                                    required
-                                />
+                                <textarea value={newProduct.description} onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })} rows="3" required />
                             </div>
                             <div className="form-group">
                                 <label>Image URL *</label>
-                                <input
-                                    type="text"
-                                    value={newProduct.image}
-                                    onChange={(e) => setNewProduct({ ...newProduct, image: e.target.value })}
-                                    placeholder="https://res.cloudinary.com/... or /images/bag1.jpg"
-                                    required
-                                />
-                                <small>Paste Cloudinary URL or local image path</small>
+                                <input type="text" value={newProduct.image} onChange={(e) => setNewProduct({ ...newProduct, image: e.target.value })} placeholder="https://... or /images/..." required />
                             </div>
                             <div className="form-group">
                                 <label>Category *</label>
-                                <select
-                                    value={newProduct.category}
-                                    onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
-                                >
-                                    {categories.map(cat => (
-                                        <option key={cat.id} value={cat.id}>{cat.name}</option>
-                                    ))}
+                                <select value={newProduct.category} onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}>
+                                    {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
                                 </select>
                             </div>
-                            <div className="form-group">
-                                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                    <input
-                                        type="checkbox"
-                                        checked={newProduct.isNew}
-                                        onChange={(e) => setNewProduct({ ...newProduct, isNew: e.target.checked })}
-                                    />
-                                    Mark as New Arrival
-                                </label>
+                            <div className="form-group checkbox-group">
+                                <label><input type="checkbox" checked={newProduct.isNew} onChange={(e) => setNewProduct({ ...newProduct, isNew: e.target.checked })} /> Mark as New Arrival</label>
+                                <label><input type="checkbox" checked={newProduct.isBestSeller} onChange={(e) => setNewProduct({ ...newProduct, isBestSeller: e.target.checked })} /> Mark as Best Seller</label>
+                                <label><input type="checkbox" checked={newProduct.outOfStock} onChange={(e) => setNewProduct({ ...newProduct, outOfStock: e.target.checked })} /> Mark as Out of Stock</label>
                             </div>
                             <div className="modal-actions">
                                 <button type="submit" className="save-btn">Save Product</button>
@@ -207,7 +211,7 @@ function ProductManager() {
                 </div>
             )}
 
-            {/* Edit Product Form Modal - NEW */}
+            {/* Edit Product Modal */}
             {showEditForm && editingProduct && (
                 <div className="modal-overlay">
                     <div className="modal">
@@ -215,63 +219,30 @@ function ProductManager() {
                         <form onSubmit={handleEditProduct}>
                             <div className="form-group">
                                 <label>Product Name *</label>
-                                <input
-                                    type="text"
-                                    value={editingProduct.name}
-                                    onChange={(e) => setEditingProduct({ ...editingProduct, name: e.target.value })}
-                                    required
-                                />
+                                <input type="text" value={editingProduct.name} onChange={(e) => setEditingProduct({ ...editingProduct, name: e.target.value })} required />
                             </div>
                             <div className="form-group">
-                                <label>Price ($) *</label>
-                                <input
-                                    type="number"
-                                    step="0.01"
-                                    value={editingProduct.price}
-                                    onChange={(e) => setEditingProduct({ ...editingProduct, price: e.target.value })}
-                                    required
-                                />
+                                <label>Price (₦) *</label>
+                                <input type="number" step="0.01" value={editingProduct.price} onChange={(e) => setEditingProduct({ ...editingProduct, price: e.target.value })} required />
                             </div>
                             <div className="form-group">
                                 <label>Description *</label>
-                                <textarea
-                                    value={editingProduct.description}
-                                    onChange={(e) => setEditingProduct({ ...editingProduct, description: e.target.value })}
-                                    rows="3"
-                                    required
-                                />
+                                <textarea value={editingProduct.description} onChange={(e) => setEditingProduct({ ...editingProduct, description: e.target.value })} rows="3" required />
                             </div>
                             <div className="form-group">
                                 <label>Image URL *</label>
-                                <input
-                                    type="text"
-                                    value={editingProduct.image}
-                                    onChange={(e) => setEditingProduct({ ...editingProduct, image: e.target.value })}
-                                    placeholder="https://res.cloudinary.com/... or /images/bag1.jpg"
-                                    required
-                                />
-                                <small>Paste Cloudinary URL or local image path</small>
+                                <input type="text" value={editingProduct.image} onChange={(e) => setEditingProduct({ ...editingProduct, image: e.target.value })} required />
                             </div>
                             <div className="form-group">
                                 <label>Category *</label>
-                                <select
-                                    value={editingProduct.category}
-                                    onChange={(e) => setEditingProduct({ ...editingProduct, category: e.target.value })}
-                                >
-                                    {categories.map(cat => (
-                                        <option key={cat.id} value={cat.id}>{cat.name}</option>
-                                    ))}
+                                <select value={editingProduct.category} onChange={(e) => setEditingProduct({ ...editingProduct, category: e.target.value })}>
+                                    {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
                                 </select>
                             </div>
-                            <div className="form-group">
-                                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                    <input
-                                        type="checkbox"
-                                        checked={editingProduct.isNew || false}
-                                        onChange={(e) => setEditingProduct({ ...editingProduct, isNew: e.target.checked })}
-                                    />
-                                    Mark as New Arrival
-                                </label>
+                            <div className="form-group checkbox-group">
+                                <label><input type="checkbox" checked={editingProduct.isNew} onChange={(e) => setEditingProduct({ ...editingProduct, isNew: e.target.checked })} /> Mark as New Arrival</label>
+                                <label><input type="checkbox" checked={editingProduct.isBestSeller} onChange={(e) => setEditingProduct({ ...editingProduct, isBestSeller: e.target.checked })} /> Mark as Best Seller</label>
+                                <label><input type="checkbox" checked={editingProduct.outOfStock} onChange={(e) => setEditingProduct({ ...editingProduct, outOfStock: e.target.checked })} /> Mark as Out of Stock</label>
                             </div>
                             <div className="modal-actions">
                                 <button type="submit" className="save-btn">Update Product</button>
@@ -282,66 +253,66 @@ function ProductManager() {
                 </div>
             )}
 
-            {/* Products List */}
-            {products.length === 0 ? (
-                <div className="no-products">
-                    <p>No products yet. Click "Add New Product" to get started.</p>
-                </div>
-            ) : (
-                <div className="products-table-container">
-                    <table className="products-table">
-                        <thead>
-                            <tr>
-                                <th>Image</th>
-                                <th>Name</th>
-                                <th>Price</th>
-                                <th>Category</th>
-                                <th>Description</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {products.map(product => (
-                                <tr key={product.id}>
-                                    <td><img src={product.image} alt={product.name} className="product-thumb" /></td>
-                                    <td>{product.name}</td>
-                                    <td>₦{product.price}</td>
-                                    <td><span className="category-badge">{product.category}</span></td>
-                                    <td className="desc-cell">{product.description.substring(0, 50)}...</td>
-                                    <td>{product.isNew ? '🆕' : ''}</td>
-                                    <td className="actions-cell">
-                                        {/* EDIT BUTTON - NEW */}
-                                        <button
-                                            onClick={() => openEditForm(product)}
-                                            className="edit-product-btn"
-                                            title="Edit product"
-                                        >
-                                            ✏️
-                                        </button>
+            {/* Products Table */}
+            <div className="products-table-container">
+                <table className="products-table">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Category</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {products.map(product => (
+                            <tr key={product.id}>
+                                <td><img src={product.image} alt={product.name} className="product-thumb" /></td>
+                                <td>{product.name}</td>
+                                <td>₦{product.price}</td>
+                                <td><span className="category-badge">{product.category}</span></td>
+                                <td className="status-cell">
+                                    {product.isNew && <span className="status-new">🆕 New</span>}
+                                    {product.isBestSeller && <span className="status-bestseller">⭐ Best Seller</span>}
+                                    {product.outOfStock && <span className="status-outofstock">❌ Out of Stock</span>}
+                                    {!product.isNew && !product.isBestSeller && !product.outOfStock && <span className="status-normal">—</span>}
+                                </td>
+                                <td className="actions-cell">
+                                    {/* Best Seller Toggle Button */}
+                                    <button onClick={() => toggleBestSeller(product)} className={`action-btn bestseller-btn ${product.isBestSeller ? 'active' : ''}`} title="Toggle Best Seller">
+                                        ⭐
+                                    </button>
 
-                                        {/* DELETE BUTTON */}
-                                        {deleteConfirm === product.id ? (
-                                            <div className="delete-confirm">
-                                                <span>Sure?</span>
-                                                <button onClick={() => handleDeleteProduct(product.id)} className="confirm-yes">✓</button>
-                                                <button onClick={() => setDeleteConfirm(null)} className="confirm-no">✗</button>
-                                            </div>
-                                        ) : (
-                                            <button
-                                                onClick={() => setDeleteConfirm(product.id)}
-                                                className="delete-product-btn"
-                                                title="Delete product"
-                                            >
-                                                🗑️
-                                            </button>
-                                        )}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            )}
+                                    {/* Out of Stock Toggle Button */}
+                                    <button onClick={() => toggleOutOfStock(product)} className={`action-btn stock-btn ${product.outOfStock ? 'active' : ''}`} title="Toggle Out of Stock">
+                                        📦
+                                    </button>
+
+                                    {/* Edit Button */}
+                                    <button onClick={() => openEditForm(product)} className="action-btn edit-btn" title="Edit product">
+                                        ✏️
+                                    </button>
+
+                                    {/* Delete Button */}
+                                    {deleteConfirm === product.id ? (
+                                        <div className="delete-confirm">
+                                            <span>Sure?</span>
+                                            <button onClick={() => handleDeleteProduct(product.id)} className="confirm-yes">✓</button>
+                                            <button onClick={() => setDeleteConfirm(null)} className="confirm-no">✗</button>
+                                        </div>
+                                    ) : (
+                                        <button onClick={() => setDeleteConfirm(product.id)} className="action-btn delete-btn" title="Delete product">
+                                            🗑️
+                                        </button>
+                                    )}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     )
 }

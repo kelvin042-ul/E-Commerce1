@@ -52,14 +52,14 @@
 
 .form-group input:focus {
     outline: none;
-    border-color: #ff6b6b;
+    border-color: rgb(209, 207, 207);
     box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.1);
 }
 
 .login-btn {
     width: 100%;
     padding: 0.7rem;
-    background: #28a745;
+    background: rgb(43, 42, 42);
     color: white;
     border: none;
     border-radius: 6px;
@@ -71,7 +71,7 @@
 }
 
 .login-btn:hover {
-    background: #218838;
+    background: black;
 }
 
 .error-message {

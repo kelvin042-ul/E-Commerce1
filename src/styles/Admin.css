@@ -9,7 +9,7 @@
 }
 
 .access-denied h2 {
-    color: #dc3545;
+    color: black;
     margin-bottom: 1rem;
     font-size: 2rem;
 }
@@ -30,7 +30,7 @@
 .home-link {
     display: inline-block;
     padding: 0.75rem 2rem;
-    background: linear-gradient(135deg, #6B46C1, #4299E1);
+    background: rgb(25, 25, 25);
     color: white;
     text-decoration: none;
     border-radius: 6px;

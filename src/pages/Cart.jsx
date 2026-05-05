@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import CartItem from '../components/CartItem'
 import CheckoutForm from '../components/CheckoutForm'
 import { v4 as uuidv4 } from 'uuid'
@@ -37,18 +37,12 @@ function Cart({ cart, updateCartItem, removeFromCart, clearCart, showNotificatio
         }
 
         try {
-            // Save order to Firestore
             await addDoc(collection(db, 'orders'), order)
-            console.log('Order saved to Firebase')
-
-            // Send WhatsApp to Admin
             const whatsappMessage = formatWhatsAppOrder(order, customerData)
             window.location.href = `https://wa.me/${import.meta.env.VITE_ADMIN_PHONE}?text=${encodeURIComponent(whatsappMessage)}`
-
             showNotification('✓ Order placed! Admin will contact you.', 'success')
             clearCart()
             setShowCheckout(false)
-
             navigate('/receipt', { state: { orderId: order.orderId } })
         } catch (error) {
             console.error('Error saving order:', error)
@@ -63,25 +57,29 @@ function Cart({ cart, updateCartItem, removeFromCart, clearCart, showNotificatio
 
         return `🛍️ *NEW ORDER - SAMDELIVING*
     
-        *Customer:* ${customer.fullName}
-        *Phone:* ${customer.phone}
-        *Email:* ${customer.email}
-        *Address:* ${customer.address}
+*Customer:* ${customer.fullName}
+*Phone:* ${customer.phone}
+*Email:* ${customer.email}
+*Address:* ${customer.address}
 
-        *Items:*
-        ${itemsList}
+*Items:*
+${itemsList}
 
-        *Total:* ₦${order.total.toFixed(2)}
+*Total:* ₦${order.total.toFixed(2)}
 
-        *Order ID:* ${order.orderId.slice(0, 8)}`
+*Order ID:* ${order.orderId.slice(0, 8)}`
     }
 
+    // Empty cart with nice button
     if (cart.length === 0) {
         return (
-            <div className="empty-cart">
-                <h2>Your Cart is Empty</h2>
-                <p>Looks like you haven't added any items to your cart yet.</p>
-                <a href="/shop" className="shop-now-btn">Shop Now</a>
+            <div className="empty-cart-container">
+                <div className="empty-cart-card">
+                    <div className="empty-cart-icon">🛒</div>
+                    <h2>Your Cart is Empty</h2>
+                    <p>Looks like you haven't added any items to your cart yet.</p>
+                    <Link to="/shop" className="empty-cart-shop-btn">Start Shopping →</Link>
+                </div>
             </div>
         )
     }
@@ -110,7 +108,7 @@ function Cart({ cart, updateCartItem, removeFromCart, clearCart, showNotificatio
                     </div>
                     <div className="summary-item">
                         <span>Shipping:</span>
-                        <span>{shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}</span>
+                        <span>{shipping === 0 ? 'Free' : `₦${shipping.toFixed(2)}`}</span>
                     </div>
                     <div className="summary-item total">
                         <span>Total:</span>

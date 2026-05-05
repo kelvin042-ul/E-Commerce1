@@ -1,34 +1,180 @@
 .product-manager {
-    background: white;
+    background: #ffffff;
     border-radius: 12px;
-    padding: 1rem;
+    padding: 24px;
 }
 
 .product-manager-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
+    margin-bottom: 24px;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 16px;
 }
 
 .product-manager-header h2 {
-    color: #333;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #1e1e1e;
 }
 
 .add-product-btn {
-    padding: 0.5rem 1rem;
-    background: #ff6b6b;
-    color: white;
+    padding: 10px 20px;
+    background: #2c2c2c;
+    color: #ffffff;
     border: none;
-    border-radius: 4px;
-    font-size: 0.8rem;
+    border-radius: 8px;
     cursor: pointer;
+    font-size: 0.85rem;
+    font-family: 'Poppins', sans-serif;
+    transition: background 0.3s ease;
 }
 
-/* Modal */
+.add-product-btn:hover {
+    background: #1e1e1e;
+}
+
+/* Table Styles */
+.products-table-container {
+    overflow-x: auto;
+}
+
+.products-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+.products-table th {
+    text-align: left;
+    padding: 14px 12px;
+    background: #f8f8f8;
+    color: #4a4a4a;
+    font-weight: 600;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.products-table td {
+    padding: 14px 12px;
+    border-bottom: 1px solid #f0f0f0;
+    color: #4a4a4a;
+}
+
+.product-thumb {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.category-badge {
+    background: #f0f0f0;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    color: #4a4a4a;
+}
+
+/* Status Badges */
+.status-cell {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.status-new {
+    background: #1e1e1e;
+    color: #ffffff;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-size: 0.65rem;
+    font-weight: 500;
+}
+
+.status-bestseller {
+    background: #d4af37;
+    color: #1e1e1e;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-size: 0.65rem;
+    font-weight: 500;
+}
+
+.status-outofstock {
+    background: #cc0000;
+    color: #ffffff;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-size: 0.65rem;
+    font-weight: 500;
+}
+
+.status-normal {
+    color: #aaa;
+    font-size: 0.7rem;
+}
+
+/* Action Buttons */
+.actions-cell {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    background: #f5f5f5;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+    background: #e8e8e8;
+}
+
+.bestseller-btn.active {
+    background: #d4af37;
+    border-color: #d4af37;
+}
+
+.stock-btn.active {
+    background: #cc0000;
+    border-color: #cc0000;
+    color: white;
+}
+
+.delete-confirm {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.delete-confirm span {
+    font-size: 0.7rem;
+    color: #888;
+}
+
+.confirm-yes,
+.confirm-no {
+    background: none;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 4px 8px;
+    cursor: pointer;
+    font-size: 0.7rem;
+}
+
+.confirm-yes:hover {
+    background: #cc0000;
+    color: white;
+    border-color: #cc0000;
+}
+
+/* Modal Styles */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -43,117 +189,105 @@
 }
 
 .modal {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 12px;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 28px;
     width: 90%;
-    max-width: 500px;
+    max-width: 550px;
     max-height: 85vh;
     overflow-y: auto;
 }
 
 .modal h3 {
-    color: #333;
-    margin-bottom: 1rem;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
+    color: #1e1e1e;
+    margin-bottom: 20px;
 }
 
-.modal .form-group {
-    margin-bottom: 0.8rem;
+.form-group {
+    margin-bottom: 16px;
 }
 
-.modal .form-group label {
+.form-group label {
     display: block;
-    margin-bottom: 0.3rem;
     font-size: 0.8rem;
     font-weight: 500;
-    color: #555;
+    color: #4a4a4a;
+    margin-bottom: 6px;
 }
 
-.modal .form-group input,
-.modal .form-group textarea,
-.modal .form-group select {
+.form-group input,
+.form-group textarea,
+.form-group select {
     width: 100%;
-    padding: 0.6rem;
+    padding: 10px 12px;
+    background: #fafafa;
     border: 1px solid #e0e0e0;
-    border-radius: 4px;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
     font-size: 0.85rem;
+    color: #1e1e1e;
+}
+
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.checkbox-group input {
+    width: auto;
 }
 
 .modal-actions {
     display: flex;
-    gap: 0.8rem;
-    margin-top: 1rem;
+    gap: 12px;
+    margin-top: 24px;
 }
 
 .save-btn {
     flex: 1;
-    padding: 0.6rem;
-    background: #ff6b6b;
+    padding: 10px;
+    background: #2c2c2c;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
 }
 
 .cancel-btn {
     flex: 1;
-    padding: 0.6rem;
-    background: #f5f5f5;
-    color: #666;
-    border: none;
-    border-radius: 4px;
+    padding: 10px;
+    background: #f0f0f0;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
     cursor: pointer;
-}
-
-/* Products Table */
-.products-table-container {
-    overflow-x: auto;
-}
-
-.products-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.75rem;
-}
-
-.products-table th {
-    background: #f5f5f5;
-    padding: 0.6rem;
-    text-align: left;
-}
-
-.products-table td {
-    padding: 0.6rem;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.product-thumb {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-    border-radius: 4px;
-}
-
-.category-badge {
-    background: #f5f5f5;
-    padding: 0.2rem 0.5rem;
-    border-radius: 20px;
-    font-size: 0.7rem;
-}
-
-.delete-product-btn,
-.edit-product-btn {
-    background: none;
-    border: none;
-    font-size: 1rem;
-    cursor: pointer;
-    margin: 0 0.2rem;
+    color: #4a4a4a;
 }
 
 @media (max-width: 768px) {
-    .product-manager-header {
-        flex-direction: column;
-        align-items: flex-start;
+    .product-manager {
+        padding: 16px;
+    }
+
+    .products-table th,
+    .products-table td {
+        padding: 10px 8px;
+    }
+
+    .actions-cell {
+        gap: 4px;
+    }
+
+    .action-btn {
+        padding: 4px 8px;
+        font-size: 0.8rem;
     }
 }

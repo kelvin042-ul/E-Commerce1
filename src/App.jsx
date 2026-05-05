@@ -15,6 +15,7 @@ import { getCart, saveCart } from './utils/storage'
 function App() {
   const [cart, setCart] = useState([])
   const [notification, setNotification] = useState({ show: false, message: '', type: '' })
+  const [globalSearchTerm, setGlobalSearchTerm] = useState('')
 
   // Load cart from localStorage when app starts
   useEffect(() => {
@@ -73,6 +74,11 @@ function App() {
     }, 3000)
   }
 
+  // Handle search from Navbar
+  const handleSearch = (searchTerm) => {
+    setGlobalSearchTerm(searchTerm)
+  }
+
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0)
 
   return (
@@ -80,12 +86,12 @@ function App() {
       <Router>
         <div className="app">
           <TopBanner />
-          <Navbar cartCount={cartCount} />
+          <Navbar cartCount={cartCount} onSearch={handleSearch} />
           <main className="main-content">
             <Routes>
               <Route path="/receipt" element={<Receipt />} />
-              <Route path="/" element={<Home addToCart={addToCart} />} />
-              <Route path="/shop" element={<Shop addToCart={addToCart} />} />
+              <Route path="/" element={<Home addToCart={addToCart} searchTerm={globalSearchTerm} />} />
+              <Route path="/shop" element={<Shop addToCart={addToCart} cartCount={cartCount} />} />
               <Route path="/cart" element={
                 <Cart
                   cart={cart}
