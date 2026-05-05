@@ -1,5 +1,5 @@
 # E-Commerce1
-# 🛍️ BagShop E-Commerce Platform
+# 🛍️ Sam-De-Living E-Commerce Platform
 
 A complete, production-ready e-commerce website built with React, Firebase, and WhatsApp integration. Perfect for selling bags, accessories, or any physical products.
 
@@ -50,14 +50,13 @@ A complete, production-ready e-commerce website built with React, Firebase, and 
 - 🔒 Firebase Authentication (multi-admin support)
 - 💬 WhatsApp integration (free, no API keys)
 - 📱 LocalStorage cart persistence
-- 🎨 AliExpress-style modern design
 - 📊 Recharts analytics with real-time updates
 
 ---
 
 ## 🚀 **Demo**
 
-**Live Demo:** [https://bagshop-demo.netlify.app](https://bagshop-demo.netlify.app)
+**Live Demo:** [https://chielo.netlify.app](https://chielo.netlify.app)
 
 **Admin Login:**
 - Email: `demo@bagshop.com`
